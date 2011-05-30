@@ -1,0 +1,238 @@
+<project name="JorumSearch" default="run-app" basedir=".">
+	<description>
+		JorumSearch Ant script to wrap the Grails build
+	</description>
+    
+    <property file="${PROPS}"/>
+	<property name="grails.home" value="/opt/grails-1.3.1"/>
+	<property name="grails.env" value="development"/>
+	<property name="grails.index.script" value="scripts/Index.groovy"/> 
+	<property name="build.log.dir" location="${basedir}/buildlogs"/>
+	<property name="index.log.dir" location="${basedir}/indexlogs"/>
+	<property name="solr.home" value="${basedir}/build/solr-home"/> 
+	<property name="solr.stop.port" value="8079"/> 
+	<property name="solr.stop.key" value="secret"/> 
+	<property name="solr.url" value="http://localhost:8983/solr"/> 
+	<property name="solr.port" value="8983"/> 
+	<property name="java_opts" value="-Dname=jorumsearch -server -Xms512M -Xmx512M -XX:MaxPermSize=192m -Dfile.encoding=UTF-8"/>
+
+
+
+	<path id="grails.classpath">	
+		<fileset dir="${grails.home}/dist">
+			<include name="**/*.jar"/>
+		</fileset>
+        
+		<fileset dir="${grails.home}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	
+
+	<taskdef name="grails" classname="grails.ant.GrailsTask" classpathref="grails.classpath"/>
+	
+	
+	
+	<target name="init">
+		<tstamp>
+			<format property="timestamp" pattern="yyyy-MM-dd_HH-mm-ss"/>
+		</tstamp>
+
+		<mkdir dir="${build.log.dir}"/>
+		
+		<property name="build.log.filename" value="build_${timestamp}.log"/>
+		<record name="${build.log.dir}/${build.log.filename}" loglevel="verbose" append="false"/>
+		<echo message="Build logged to ${build.log.dir}/${build.log.filename}"/>
+		
+		
+	</target>
+
+	<target name="upgrade" description="Upgrade target">
+		<exec executable="${grails.home}/bin/grails" timeout="300000" failonerror="true">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    		<arg line="-Dgrails.env=${grails.env} upgrade"/>
+    		<arg line="-force"/>
+  		</exec>
+	</target>
+
+	<target name="compile" description="Compile target" depends="init">
+		<exec executable="${grails.home}/bin/grails" timeout="1000000" failonerror="true">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    		<arg line="-Dgrails.env=${grails.env} compile"/>
+  		</exec>
+	</target>
+	
+	<target name="stop-solr" description="Stop the SOLR server" depends="init">
+		<exec executable="${grails.home}/bin/grails" timeout="20000" failonerror="true">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    		<arg line="-Dgrails.env=${grails.env} stop-solr"/>
+  		</exec>
+	</target>
+	
+	<target name="copy-solr-config" description="Copy the SOLR config to the SOLR home">
+		<echo message=""/>
+		<echo message="Copying SOLR config from ${basedir}/grails-app/conf/solr to ${solr.home}/solr/conf"/>
+		<copy todir="${solr.home}/solr/conf" verbose="true" overwrite="true">
+    			<fileset dir="${basedir}/grails-app/conf/solr">
+    				<include name="**/*"/>
+    			</fileset>
+  		</copy>
+  		<echo message=""/>
+	</target>
+	
+	<target name="copy-jetty-xml" description="Copy the jetty.xml to the SOLR home /etc dirictory">
+		<echo message=""/>
+		<echo message="Copying jetty.xml from ${basedir}/grails-app/conf/jetty to ${solr.home}/etc"/>
+		<copy todir="${solr.home}/etc" verbose="true" overwrite="true">
+    			<fileset dir="${basedir}/grails-app/conf/jetty">
+    				<include name="jetty.xml"/>
+    			</fileset>
+  		</copy>
+  		<echo message=""/>
+	</target>
+	
+	<target name="start-solr" description="Start the SOLR server" depends="init, copy-jetty-xml">
+		<echo message="Starting Solr - spawning process, no output will be shown..." />
+		
+		
+		<!-- NOTE: This is a hack - must start SOLR initially by the grails gant script inorder to ensure
+		           solr home is setup correctly and te files copied across!! -->
+		<exec executable="${grails.home}/bin/grails" timeout="600000" failonerror="true">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    		<arg line="-Dgrails.env=${grails.env} start-solr"/>
+  		</exec>           
+		
+		<!-- Kill off solr now that the dir has been created -->
+		<antcall target="stop-solr"/>
+
+
+		<!-- Copy over our custom SOLR config -->
+		<antcall target="copy-solr-config"/>
+
+		
+		<path id="plugins.classpath">	
+			<fileset dir="${basedir}/build/plugins">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		
+		<!-- get the plugins classpath in a printable form -->
+		<pathconvert pathsep="${line.separator}|   |-- "
+             property="echo.path.plugins.classpath"
+             refid="plugins.classpath">
+		</pathconvert>
+		
+		<echo message="|-- plugins.classpath classpath"/>
+		<echo message="|   |"/>
+		<echo message="|   |-- ${echo.path.plugins.classpath}"/>
+		
+		<!-- Must start solr manually ie do not use the start-solr command. This is necessary as the hudson
+		     env var BUILD_ID shoudl be passed to the spwaned process otherwise hudson will kill it off when
+		     the build finishes -->
+		
+		<java jar="${solr.home}/start.jar" fork="true" spawn="true" dir="${solr.home}">
+         <classpath>
+           <pathelement path="${plugins.classpath}"/>
+         </classpath>
+         	<env key="BUILD_ID" value="dontkillmehudson1"/>
+         	<jvmarg value="-DSTOP.PORT=${solr.stop.port}" />
+         	<jvmarg value="-DSTOP.KEY=${solr.stop.key}"/> 
+			<arg line="etc/jetty-logging.xml etc/jetty.xml"/>
+       </java>
+       
+       <echo message="Starting Solr - Solr HOME is ${solr.home}"/>
+		<echo message="-----------"/>
+		<echo message="Solr logs can be found here: ${solr.home}/logs"/>
+		<echo message="Console access: http://localhost:${solr.port}/solr/"/>
+		<echo message="-----------"/>
+	</target>
+
+
+	<target name="index-solr" description="Index target">
+		<tstamp>
+			<format property="timestamp" pattern="yyyy-MM-dd_HH-mm-ss"/>
+		</tstamp>
+		<mkdir dir="${index.log.dir}"/>
+		<property name="index.log.filename" value="index_${timestamp}.log"/>
+		<echo message="Index logged to ${index.log.dir}/${index.log.filename}"/>
+		
+		<record name="${index.log.dir}/${index.log.filename}" loglevel="verbose" append="false"/>
+		<exec executable="${grails.home}/bin/grails" timeout="3000000" failonerror="true">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    		<arg line="-Dgrails.env=${grails.env} run-script"/>
+    		<arg line="${grails.index.script}"/>
+  		</exec>
+	</target>
+
+
+	<target name="delete-solr-index" description="Delete solr index">
+		<echo message="Posting delete to Sol at ${solr.url} ... " />
+		<exec executable="curl" timeout="300000" failonerror="true">
+			<arg line="${solr.url}/update"/>
+  			<arg line="-H  &#34;Content-Type: text/xml&#34;"/>
+  			<arg line="--data-binary   	&#39;&#60;delete&#62;&#60;query&#62;*:*&#60;/query&#62; &#60;/delete&#62;&#39;"/>
+  		</exec>
+  		<echo message="Committing delete... " />
+  		<exec executable="curl" timeout="300000" failonerror="true">
+			<arg line="${solr.url}/update"/>
+			<arg line="-H  &#34;Content-Type: text/xml&#34;"/>
+			<arg line="--data-binary   &#39;&#60;commit&#47;&#62;&#39;"/>
+  		</exec>
+  		<echo message="Solr should now be empty" />
+	</target>
+
+
+	<target name="stop-app" description="Stopping app" >
+    	<echo message="Stopping app... creating file .kill-run-app" />
+    	<touch file=".kill-run-app"/>
+    	<echo message="Kill app file created ... sleeping for 5 seconds ..."/>
+    	<sleep seconds="5"/>
+	</target>
+
+
+	<target name="run-app" depends="upgrade, compile, start-solr, stop-app" description="Compile and run" >
+    	<echo message="Starting app - spawning process, no output will be shown..." />
+    	<echo message="Deleting kill app file (if it exists) ...." />
+    	<delete file=".kill-run-app"/>
+    	<exec executable="${grails.home}/bin/grails" spawn="true">
+    		<!-- Set the BUILD_ID env var so that if this is run from Hudson it won't kill the spawned process when the build terminates.
+                 See https://hudson.dev.java.net/issues/show_bug.cgi?id=2729 -->
+			<env key="BUILD_ID" value="dontkillmehudson2"/>
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+			<env key="GRAILS_OPTS" value="${java_opts}"/>
+    		<arg line="-Dgrails.env=${grails.env} run-app"/>
+  		</exec>
+	</target>
+
+	<target name="deploy" depends="upgrade, compile">
+		<echo message="Appliction has been built and deployed"/>
+		<echo message="***** IMPORTANT ***** You must now recycle SOLR and start the app for changes to take affect" />
+	</target>
+
+
+	<target name="run-app-no-dep" description="Start the app - no dependancies" >
+    	<echo message="Starting app - spawning process, no output will be shown..." />
+    	<echo message="Deleting kill app file (if it exists) ...." />
+    	<delete file=".kill-run-app"/>
+    	<exec executable="${grails.home}/bin/grails" spawn="true">
+    		<!-- Set the BUILD_ID env var so that if this is run from Hudson it won't kill the spawned process when the build terminates.
+                 See https://hudson.dev.java.net/issues/show_bug.cgi?id=2729 -->
+			<env key="BUILD_ID" value="dontkillmehudson2"/>
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+			<env key="GRAILS_OPTS" value="${java_opts}"/>
+    		<arg line="-Dgrails.env=${grails.env} run-app"/>
+  		</exec>
+	</target>
+
+	<target name="clean" description="clean up" > 
+		<exec executable="${grails.home}/bin/grails">
+			<env key="GRAILS_HOME" value="${grails.home}"/>
+    			<arg line="-Dgrails.env=${grails.env} clean"/>
+  		</exec>
+		
+		<echo message="Deleting directory: ${build.log.dir}"/>
+		<delete dir="${build.log.dir}"/>
+	</target>
+
+</project>

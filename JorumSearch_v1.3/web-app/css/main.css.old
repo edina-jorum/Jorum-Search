@@ -1,0 +1,432 @@
+html * {
+    /*margin: 0;*/
+    /*padding: 0; SELECT NOT DISPLAYED CORRECTLY IN FIREFOX */
+}
+
+/* GENERAL */
+
+/*.spinner {
+    padding: 5px;
+    position: absolute;
+    right: 0;
+}
+
+body {
+    background: #fff;
+    color: #333;
+    font: 11px verdana, arial, helvetica, sans-serif;
+}
+#grailsLogo {
+	padding:20px;
+}
+
+a:link, a:visited, a:hover {
+    color: #666;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+h1 {
+    color: #48802c;
+    font-weight: normal;
+    font-size: 16px;
+    margin: .8em 0 .3em 0;
+}
+
+ul {
+    padding-left: 15px;
+}
+
+input, select, textarea {
+    background-color: #fcfcfc;
+    border: 1px solid #ccc;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    margin: 2px 0;
+    padding: 2px 4px;
+}
+select {
+   padding: 2px 2px 2px 0;
+}
+textarea {
+	width: 250px;
+	height: 150px;
+	vertical-align: top;
+}
+
+input:focus, select:focus, textarea:focus {
+    border: 1px solid #b2d1ff;
+}
+
+.body {
+    float: left;
+    margin: 0 15px 10px 15px;
+}*/
+
+/* NAVIGATION MENU */
+
+.nav {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    border-style: solid none solid none;
+    margin-top: 5px;
+    padding: 7px 12px;
+}
+
+.menuButton {
+    font-size: 10px;
+    padding: 0 5px;
+}
+.menuButton a {
+    color: #333;
+    padding: 4px 6px;
+}
+.menuButton a.home {
+    background: url(../images/skin/house.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+.menuButton a.list {
+    background: url(../images/skin/database_table.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+.menuButton a.create {
+    background: url(../images/skin/database_add.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+
+/* MESSAGES AND ERRORS */
+
+.message {
+    background: #f3f8fc url(../images/skin/information.png) 8px 50% no-repeat;
+    border: 1px solid #b2d1ff;
+    color: #006dba;
+    margin: 10px 0 5px 0;
+    padding: 5px 5px 5px 30px
+}
+
+div.errors {
+    background: #fff3f3;
+    border: 1px solid red;
+    color: #cc0000;
+    margin: 10px 0 5px 0;
+    padding: 5px 0 5px 0;
+}
+div.errors ul {
+    list-style: none;
+    padding: 0;
+}
+div.errors li {
+	background: url(../images/skin/exclamation.png) 8px 0% no-repeat;
+    line-height: 16px;
+    padding-left: 30px;
+}
+
+td.errors select {
+    border: 1px solid red;
+}
+td.errors input {
+    border: 1px solid red;
+}
+
+/* TABLES */
+
+table {
+    border: 1px solid #ccc;
+    width: 100%
+}
+tr {
+    border: 0;
+}
+td, th {
+    font: 11px verdana, arial, helvetica, sans-serif;
+    line-height: 12px;
+    padding: 5px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background: #fff url(../images/skin/shadow.jpg);
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 2px 6px;
+}
+th a:link, th a:visited, th a:hover {
+    color: #333;
+    display: block;
+    font-size: 10px;
+    text-decoration: none;
+    width: 100%;
+}
+th.asc a, th.desc a {
+    background-position: right;
+    background-repeat: no-repeat;
+}
+th.asc a {
+    background-image: url(../images/skin/sorted_asc.gif);
+}
+th.desc a {
+    background-image: url(../images/skin/sorted_desc.gif);
+}
+
+.odd {
+    background: #f7f7f7;
+}
+.even {
+    background: #fff;
+}*/
+
+/* LIST */
+
+.list table {
+    border-collapse: collapse;
+}
+.list th, .list td {
+    border-left: 1px solid #ddd;
+}
+.list th:hover, .list tr:hover {
+    background: #b2d1ff;
+}
+
+/* PAGINATION */
+
+.step, .currentStep, .prevLink, .nextLink {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    /*border-top: 0;*/
+    color: #666;
+    font-size: 1em;
+    overflow: hidden;
+    padding: 10px 10px;
+}
+.step a, .currentStep a, .prevLink a, .nextLink a  {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-color: #ccc #aaa #aaa #ccc;
+    color: #666;
+    margin: 0 3px;
+    padding: 2px 6px;
+}
+.step span, .currentStep span, .prevLink span, .nextLink span {
+    padding: 2px 3px;
+}
+
+/* DIALOG */
+
+/*.dialog table {
+    padding: 5px 0;
+}
+
+.prop {
+    padding: 5px;
+}
+.prop .name {
+    text-align: left;
+    width: 15%;
+    white-space: nowrap;
+}
+.prop .value {
+    text-align: left;
+    width: 85%;
+}*/
+
+/* ACTION BUTTONS */
+
+.buttons {
+    background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
+    border: 1px solid #ccc;
+    color: #666;
+    font-size: 10px;
+    margin-top: 5px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.buttons input {
+    background: #fff;
+    border: 0;
+    color: #333;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 3px;
+    overflow: visible;
+    padding: 2px 6px;
+}
+.buttons input.delete {
+    background: transparent url(../images/skin/database_delete.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.edit {
+    background: transparent url(../images/skin/database_edit.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+.buttons input.save {
+    background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
+    padding-left: 28px;
+}
+
+/* JORUM STYLING */
+*  { margin:0; padding:0; line-height: 1.3em; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+h3 { padding: 0.5em;}
+h3 a { font-family: "Egyptienne F LT Std", "Egyptienne F Std", "Egyptienne F", Cambria, Georgia, serif }
+p  { padding: 0.5em; }
+a { 
+/*	color:#008fab;*/
+	color:#00677b;
+}
+a:hover { 
+	color:#006f84;
+}
+
+a img {
+	border:0;
+}
+ul { padding: 0.5em; font-weight:bold; }
+li { font-weight: normal; display: inline;}
+
+/* For the yui autocomplete selector*/
+div.yui-ac-bd ul li{
+	display: block;
+}	
+
+ul.authors li {
+	background-image: url(../images/icons/user_gray.png);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+	margin-right: 0.5em;
+}
+ul.keywords li a { 
+	background: lightblue;
+	background-image: url(../images/icons/tag_orange_wide.png);
+	background-repeat: no-repeat;
+	-webkit-border-radius: 0.5em; 
+	-moz-border-radius: 0.5em; 
+	border-radius: 0.5em;
+	padding: 0 0.75em;
+	padding-left: 25px;
+	font-size: 0.9em;
+	line-height: 1.5em;
+	text-decoration: none;
+}
+ul.keywords li a:hover{
+	color:lightblue;
+	background: DodgerBlue;
+	background-image: url(../images/icons/tag_orange_wide.png);
+	background-repeat: no-repeat;
+	text-decoration: underline;
+}
+a.rights-text { display: none;}
+.rights { padding: 0.5em 0.5em 0 0.5em; float: right;}
+.record {margin:0 0.5em;padding:1em 0;border-bottom: 1px dashed silver;}
+.even { background: #eeeeee;}
+
+#pageBody{
+	padding:0;
+}
+
+#search-box{
+	background: #008fab;
+	background-image: url(../images/aqua-top-right.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+	width: 20em;
+	height: 14em;
+	margin: 100px auto;
+	padding: 2em;
+}
+
+#search-box input{
+	display:block;
+}
+
+#search-box img{
+	margin-bottom:0.5em
+}
+
+#search-box #q{
+	width: 100%;
+	margin:1em auto 1.5em 0;
+	font-size: 1.8em;
+	padding-left:0.25em;
+}
+
+#search-box #search-button{
+	color:white;
+	font-size: 1.5em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #008fab;
+	border: 3px solid white;
+	padding-left:0.5em;
+	padding-right:0.5em;
+}
+
+#search-box #search-button:hover{
+	background: #006f84;
+}
+
+#search-box-banner{
+	background: #008fab;
+	background-image: url(../images/aqua-top-right.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+	height:95px;
+}
+
+#search-box-banner img {
+	display: inline;
+	margin: 1.5em;
+}
+
+#search-box-banner h1 {
+	display: inline;
+}
+
+#results{
+	width:auto;
+	margin-left: 255px;
+	display:block;
+/*	padding-right:30px;*/
+}
+
+#facets {
+	margin-left: 1.5em;
+	margin-right:1.5em;
+	width:225px; 
+	float: left; 
+	display:block;"
+}
+
+#facets #q{
+	width: 80%;
+	margin:1em auto 0.5em 0;
+	font-size: 1.5em;
+	padding-left:0.25em;
+}
+
+#facets #search-button{
+	color:#008fab;
+	font-size: 1.25em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: white;
+	border: 3px solid #008fab;
+	padding-left:0.5em;
+	padding-right:0.5em;
+}
+
+#facets #search-button:hover{
+	background: #dddddd;
+}
+
+#bottom-gradient {
+	background-image: url(../images/aqua-bottom-gradient.png);
+	background-repeat: repeat-x;
+	background-position: top right;
+}

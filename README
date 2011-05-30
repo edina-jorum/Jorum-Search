@@ -1,0 +1,37 @@
+Description :- This is a search tool developed as Groovy on Grails application. Groovy on Grails is a 'convention over configuration' framework so once you have seen one you have seen one them all. A good reference source is http://grails.org/Installation. The content to be searched is indexed by Solr. To populate Solr save the ouput from an OIA-PMH harvest.
+
+The following describes my own experience of installing the tool, it is not meant to be a definitive installation guide.
+
+1. Installed groovy and grails. 
+
+2. Downloaded the project.
+
+3. Created my own etc/myHostname-config.groovy file. At the time of creation I had no idea what it was for, only that Groovy insists on it being present.
+
+(I use IntellijIDEA, you may use a different IDE, or none at all).
+
+4. Enabled the IDEA plugins for groovy and grails.
+
+5. Imported the project and created an IDEA grails project for it.
+
+I was asked if I wanted to upgrade the project from grails 1.3.1 to 1.3.7 to which I replied yes.
+At this point some sort of build process seemed to take place which completed without errors. 
+
+Phase 2 !
+
+6. Created my own local jorumsearch.etc/xxx_build.properties file. All Ant tasks should be run with -DPROPS=pathToFile/xxx_build.properties.
+
+7. Create the mysql database JorumSearch and user jorum. Edited grailsApp/conf/DataSource.groovy.
+
+8. Edited grailsApp/conf/Bootstrap.groovy to provide a SpringSecurityService username and password.
+
+9. Ran the Ant target run-app. The webapp was then available but with no content.
+
+10. To create content save the output from an OAI-PMH harvest and update your hostname-config.groovy file to point to the saved output file.
+
+11. Now run Ant target index-solr.
+
+Note - When I ran index-solr it complained because it found 2 versions of RunScript.groovy. I think this is because I had installed a later version of grails. I renamed the one in the 'scripts' directory and it then ran happily using the one in my grails installation.
+
+Thats all folks !
+

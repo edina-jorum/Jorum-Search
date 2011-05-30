@@ -1,0 +1,15 @@
+ul.keywords li a { 
+	background: none;
+	background-image: none;
+	padding: 0 0.5em;
+	padding-left: 0;
+	font-size: 0.9em;
+	line-height: 1.5em;
+	text-decoration: underline;
+}
+ul.keywords li a:hover{
+	color:#F90;
+	background: none;
+	background-image: none;
+	text-decoration: underline;
+}
